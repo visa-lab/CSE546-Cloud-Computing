@@ -7,10 +7,11 @@ The following command sends three requests to a php backend.
 python3 workload_generator.py \
  --num_request 3 \
  --url 'http://your_host_ip/php_server.php' \
- --image_folder "your_local_image_folder"
+ --image_folder "your_local_image_folder" \
+ --prediction_file "ground_truth_prediction_file"
 ```
 
-The following command sends three requests to a node.js backend.
+The following command sends three requests to a node.js/Python backend.
 ```
 python3 workload_generator.py \
  --num_request 3 \

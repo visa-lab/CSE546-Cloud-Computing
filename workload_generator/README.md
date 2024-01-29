@@ -22,12 +22,15 @@ python3 workload_generator.py \
 
 Sample output:
 ```
-test_918.JPEG uploaded!
-Classification result: Bill
-
-test_934.JPEG uploaded!
-Classification result: Emily
-
-test_200.JPEG uploaded!
-Classification result: Paul
+test_411.jpg uploaded!
+Classification result: test_411:Emily
+Waiting ...
+.
++++++ Test Result Statistics +++++
+Total number of requests: 1000
+Total number of requests completed successfully: 1000
+Total number of failed requests: 0
+Total number of correct predictions: 1000
+Total number of wrong predictions: 0
+Total Test Duration: 2.104762077331543 (seconds)
 ```

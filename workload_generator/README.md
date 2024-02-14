@@ -1,4 +1,4 @@
-# CSE546_workload_generator
+# CSE546 workload_generator
 
 This repository contains code examples for you to use our workload generator.
 
@@ -19,6 +19,7 @@ python3 workload_generator.py \
  --image_folder "your_local_image_folder" \
  --prediction_file "ground_truth_prediction_file"
 ```
+**Note**: The workload generator accepts the absolute path in the command line arguments. 
 
 Sample output:
 ```

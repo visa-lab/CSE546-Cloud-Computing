@@ -105,7 +105,7 @@ class aws_grader():
     def beautify_headers(self):
 
         column1 = " # of messages in SQS Request Queue "
-        column2 = " # of messages in SQS Reponse Queue "
+        column2 = " # of messages in SQS Response Queue "
         column3 = " # of EC2 instances in running state "
         column4 = " # of objects in S3 Input Bucket "
         column5 = " # of objects in S3 Output Buket "
@@ -115,7 +115,7 @@ class aws_grader():
         wrapped_column2 = textwrap.fill(column2, column_width)
         wrapped_column3 = textwrap.fill(column3, column_width)
         wrapped_column4 = textwrap.fill(column4, column_width)
-        wrapped_column5 = textwrap.fill(column4, column_width)
+        wrapped_column5 = textwrap.fill(column5, column_width)
         lines1 = wrapped_column1.split('\n')
         lines2 = wrapped_column2.split('\n')
         lines3 = wrapped_column3.split('\n')
@@ -129,9 +129,10 @@ class aws_grader():
         print("-" *114)
 
     def validate_autoscaling(self):
-        print(" - Run this BEFORE the workload generator client starts.")
-        print(" - The expectation is that the app tier instances scales up and down based on the number of requests inthe queue.")
-
+        print(" - Run this BEFORE the workload generator client starts. Press Ctrl^C to exit.")
+        print(" - The expectation is as follows:")
+        print(" -- # of app tier instances should gradually scale and eventually reduce back to 0")
+        print(" -- # of SQS messages should gradually increase and eventually reduce back to 0")
         self.beautify_headers()
         format_string = "| {:^20} | {:^20} | {:^20} | {:^20} | {:^20} |"
 

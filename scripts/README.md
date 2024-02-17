@@ -128,11 +128,13 @@
     0 - Exit
     Enter a choice:
     4
-     - Run this BEFORE the workload generator client starts.
-     - The expectation is that the app tier instances scales up and down based on the number of requests inthe queue.
+     - Run this BEFORE the workload generator client starts. Press Ctrl^C to exit.
+     - The expectation is as follows:
+     -- # of app tier instances should gradually scale and eventually reduce back to 0
+     -- # of SQS messages should gradually increase and eventually reduce back to 0
     ------------------------------------------------------------------------------------------------------------------
     |   # of messages in   |   # of messages in   |  # of EC2 instances  |  # of objects in S3  |  # of objects in S3  |
-    |  SQS Request Queue   |  SQS Reponse Queue   |   in running state   |     Input Bucket     |     Input Bucket     |
+    |  SQS Request Queue   |  SQS Response Queue  |   in running state   |     Input Bucket     |     Output Bucket    |
     ------------------------------------------------------------------------------------------------------------------
     |          0           |          0           |          0           |          0           |          0           |
     ------------------------------------------------------------------------------------------------------------------

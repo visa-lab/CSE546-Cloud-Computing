@@ -1,3 +1,6 @@
+__copyright__   = "Copyright 2024, VISA Lab"
+__license__     = "MIT"
+
 import os
 import pdb
 import time

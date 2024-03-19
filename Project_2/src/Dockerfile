@@ -1,3 +1,6 @@
+#__copyright__   = "Copyright 2024, VISA Lab"
+#__license__     = "MIT"
+
 # Define global args
 ARG FUNCTION_DIR="/home/app/"
 ARG RUNTIME_VERSION="3.8"

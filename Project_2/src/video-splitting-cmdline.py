@@ -1,9 +1,12 @@
+#__copyright__   = "Copyright 2024, VISA Lab"
+#__license__     = "MIT"
+
+
 import os
 import ffmpeg
 import subprocess
 import math
 
-#video_filename = "../test_cases/test_case_1/test_0.mp4"
 
 def video_splitting_cmdline(video_filename):
     filename = os.path.basename(video_filename)

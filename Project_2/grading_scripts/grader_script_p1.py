@@ -253,8 +253,6 @@ if __name__ == "__main__":
     parser.add_argument('--input_bucket', type=str, help='Name of the S3 Input Bucket')
     parser.add_argument('--output_bucket', type=str, help='Name of the S3 Output Bucket')
     parser.add_argument('--lambda_name', type=str, help="Name of the Lambda function")
-    parser.add_argument('--region', type=str, help="AWS region, e.g. us-east-1")
-
 
     args = parser.parse_args()
 
@@ -263,7 +261,7 @@ if __name__ == "__main__":
     input_bucket    = args.input_bucket
     output_bucket   = args.output_bucket
     lambda_name = args.lambda_name
-    region = args.region
+    region = 'us-east-1'
 
     aws_obj = aws_grader(access_key, secret_key, input_bucket, output_bucket, lambda_name,region)
     aws_obj.main()

@@ -15,7 +15,6 @@ parser.add_argument('--secret_key', type=str, help='SECRET KEY of the grading IA
 parser.add_argument('--input_bucket', type=str, help='Name of the input bucket, e.g. 1234567890-input')
 parser.add_argument('--output_bucket', type=str, help='Name of the output bucket, e.g. 1234567890-stage-1')
 parser.add_argument('--testcase_folder', type=str, help='the path of the folder where videos are saved, e.g. test_cases/test_case_1/')
-parser.add_argument('--region', type=str, help='AWS region, e.g. us-east-1')
 
 args = parser.parse_args()
 
@@ -24,7 +23,7 @@ secret_key = args.secret_key
 input_bucket = args.input_bucket
 output_bucket = args.output_bucket
 test_cases = args.testcase_folder
-region = args.region
+region = 'us-east-1'
 
 s3 = boto3_client('s3', aws_access_key_id = access_key,
                     aws_secret_access_key = secret_key, region_name=region)

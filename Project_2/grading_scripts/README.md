@@ -2,7 +2,7 @@
 
  - How to run the script: 
     ```
-    usage: grader_script_p1.py [-h] [--access_key ACCESS_KEY] [--secret_key SECRET_KEY] [--input_bucket INPUT_BUCKET] [--lambda_name LAMBDA_NAME] [--region REGION]
+    usage: grader_script_p1.py [-h] [--access_key ACCESS_KEY] [--secret_key SECRET_KEY] [--input_bucket INPUT_BUCKET] [--lambda_name LAMBDA_NAME]
     Grading Script
     options:
     -h, --help          show this help message and exit
@@ -16,7 +16,6 @@
                         Name of the S3 Output Bucket
     --lambda_name LAMBDA_NAME
                         Name of the Lambda function
-    --region REGION       AWS region, e.g. us-east-1
 
     ```
     **Note**: We will follow the naming conventions for S3 Bucket and Lambda function names as described in the project document to grade your submission
@@ -29,7 +28,7 @@ We will show examples for each option below.
 
   - Successful Test
    ```
-   python grading_scripts/grader_script_p1.py --access_key XXXX --secret_key XXXX --input_bucket 1234567890-input --lambda_name Video-splitting --region us-east-1
+   python grading_scripts/grader_script_p1.py --access_key XXXX --secret_key XXXX --input_bucket 1234567890-input --lambda_name Video-splitting
    
    =============================================================================
 ======== Welcome to CSE546 Cloud Computing AWS Console ======================

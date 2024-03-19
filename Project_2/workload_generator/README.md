@@ -4,7 +4,7 @@ This repository contains code examples for you to use our workload generator.
 
 Usage:
 ```
-usage: workload_generator.py [-h] [--access_key AWS_ACCESS_KEY_ID] [--secret_key AWS_SECRET_KEY] [--input_bucket S3_INPUT_BUCKET_NAME] [--testcase_folder TESTCASE_FOLDER] [--region REGION]
+usage: workload_generator.py [-h] [--access_key AWS_ACCESS_KEY_ID] [--secret_key AWS_SECRET_KEY] [--input_bucket S3_INPUT_BUCKET_NAME] [--testcase_folder TESTCASE_FOLDER]
 
 Upload videos to input S3
 
@@ -20,7 +20,6 @@ options:
                         Name of the output bucket, e.g. 1234567890-stage-1
   --testcase_folder TESTCASE_FOLDER
                         the path of the folder where videos are saved, e.g. test_cases/test_case_1/
-  --region REGION       AWS region, e.g. us-east-1
 ```
 
 Examples:
@@ -32,7 +31,6 @@ python3 workload_generator.py \
  --secret_key <SECRET_KEY> \
  --input_bucket 1234567890-input \
  --testcase_folder test_cases/test_case_1/ \
- --region us-east-1
 ```
 
 Sample output:

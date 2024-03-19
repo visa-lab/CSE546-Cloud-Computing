@@ -222,7 +222,7 @@ class aws_grader():
         print("3 - Validate S3 output bucket subfolders")
         print("4 - Validate S3 output objects")
         print("5 - Check lambda average duration")
-        print("6 - heck lambda concurrency")
+        print("6 - Check lambda concurrency")
         print("0 - Exit")
         print("Enter a choice:")
         choice = input()

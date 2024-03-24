@@ -54,7 +54,7 @@ class aws_grader():
         for obj in in_objects['Contents']:
             folder_name = obj['Key'].rsplit('.',1)[0]
             out_objects = self.s3.list_objects_v2(Bucket=self.out_bucket_name, Prefix=folder_name, Delimiter='/')
-            if out_objects['KeyCount'] == 1:
+            if out_objects['KeyCount'] == 1 or out_objects['KeyCount'] == 11:
                 folder_name = out_objects['CommonPrefixes'][0]['Prefix'].rsplit("/")[0]
                 prefix_name = out_objects['Prefix']
                 if folder_name == prefix_name:
@@ -63,15 +63,17 @@ class aws_grader():
                 prefix_name = out_objects['Prefix']
                 self.test_result[TC_num] = "FAIL"
                 print(f"NO folder named {prefix_name}")
+                print(out_objects)
         print(f"Test status of {TC_num} : {self.test_result[TC_num]}")
 
     def validate_s3_output_objects(self, TC_num):
         bucket = self.s3_resources.Bucket(self.out_bucket_name)
+        in_bucket = self.s3_resources.Bucket(self.in_bucket_name)
+
         try:
             objects = list(bucket.objects.all())
             print(f"Got {len(objects)} objects {[o.key for o in objects]} from bucket {bucket.name}")
-            in_objects = self.s3.list_objects_v2(Bucket=self.in_bucket_name)
-            print(in_objects)
+            in_objects = list(in_bucket.objects.all())
             self.test_result[TC_num] = "PASS"
 
             for i,folder_n in enumerate(in_objects):
@@ -253,6 +255,7 @@ if __name__ == "__main__":
     parser.add_argument('--input_bucket', type=str, help='Name of the S3 Input Bucket')
     parser.add_argument('--output_bucket', type=str, help='Name of the S3 Output Bucket')
     parser.add_argument('--lambda_name', type=str, help="Name of the Lambda function")
+
 
     args = parser.parse_args()
 

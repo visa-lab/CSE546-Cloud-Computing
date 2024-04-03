@@ -78,7 +78,7 @@ class aws_grader():
 
             for i,folder_n in enumerate(in_objects):
                 if len(in_objects) * 10 == len(objects) or len(in_objects) * 11 == len(objects):
-                    print(f"Number of objects matches {len(in_objects) * 10}, {len(objects)}")
+                    print(f"Number of objects matches for given input {folder_n}")
                     self.test_result[TC_num] = "PASS"
                 else:
                     self.test_result[TC_num] = "FAIL"

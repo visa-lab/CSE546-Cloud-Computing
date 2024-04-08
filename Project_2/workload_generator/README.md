@@ -4,22 +4,21 @@ This repository contains code examples for you to use our workload generator.
 
 Usage:
 ```
-usage: workload_generator.py [-h] [--access_key AWS_ACCESS_KEY_ID] [--secret_key AWS_SECRET_KEY] [--input_bucket S3_INPUT_BUCKET_NAME] [--testcase_folder TESTCASE_FOLDER]
+usage: workload_generator.py [-h] [--access_key AWS_ACCESS_KEY_ID] [--secret_key AWS_SECRET_KEY] [--asu_id ASU_ID] [--testcase_folder TESTCASE_FOLDER]
 
 Upload videos to input S3
 
 options:
+
   -h, --help            show this help message and exit
   --access_key ACCESS_KEY
                         ACCCESS KEY of the grading IAM user
   --secret_key SECRET_KEY
                         SECRET KEY of the grading IAM user
-  --input_bucket INPUT_BUCKET
-                        Name of the input bucket, e.g. 1234567890-input
-  --output_bucket OUTPUT_BUCKET
-                        Name of the output bucket, e.g. 1234567890-stage-1
+  --asu_id ASU_ID       10-digit ASU ID, e.g. 1234567890
   --testcase_folder TESTCASE_FOLDER
                         the path of the folder where videos are saved, e.g. test_cases/test_case_1/
+
 ```
 
 Examples:
@@ -29,7 +28,7 @@ The following command sends videos from test_case_1 folder to 1234567890-input b
 python3 workload_generator.py \
  --access_key <ACCESS_KEY> \
  --secret_key <SECRET_KEY> \
- --input_bucket 1234567890-input \
+ --asu_id 1234567890 \
  --testcase_folder test_cases/test_case_1/ \
 ```
 

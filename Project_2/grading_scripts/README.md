@@ -1,6 +1,5 @@
 ### Grading Scripts
-
- - How to run the script: 
+ - How to run the script for PART-1: 
     ```
     usage: grader_script_p1.py [-h] [--access_key ACCESS_KEY] [--secret_key SECRET_KEY] [--input_bucket INPUT_BUCKET] [--lambda_name LAMBDA_NAME]
     Grading Script
@@ -18,9 +17,24 @@
                         Name of the Lambda function
 
     ```
+
+ - How to run the script for PART-2:
+    ```
+    usage: grader_script_p2_v2.py [-h] [--access_key ACCESS_KEY] [--secret_key SECRET_KEY] [--asu_id ASU_ID]
+    Grading Script
+    optional arguments:
+    -h, --help            show this help message and exit
+    --access_key ACCESS_KEY
+                          ACCCESS KEY ID of the grading IAM user
+    --secret_key SECRET_KEY
+                          SECRET KEY of the grading IAM user
+    --asu_id ASU_ID       10-digit ASU ID
+
+    ```
+    
     **Note**: We will follow the naming conventions for S3 Bucket and Lambda function names as described in the project document to grade your submission
 
-**Examples**:
+**Examples For PART-1**:
 
 We will show examples for each option below.
 

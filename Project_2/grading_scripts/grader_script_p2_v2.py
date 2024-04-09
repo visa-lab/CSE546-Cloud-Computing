@@ -36,21 +36,26 @@ class aws_grader():
         self.end_to_end_latency = 0
         self.output_folder = f"outputs_{asu_id}"
         self.match = ["Trump", "Biden", "Bean", "Depp", "Diesel", "Floki", "Freeman", "Obama"]
+        self.total_points = 0
 
-    def validate_lambda_exists_each(self, name, TC_num):
+    def validate_lambda_exists_each(self, name, TC_num, num):
+        TC_num_sub = TC_num + "_" + str(chr(97 + num))
+
         try:
             response = self.lambda_function.get_function(
             FunctionName=name
             )
             print(f"Lambda function {name} HTTPStatusCode {response['ResponseMetadata']['HTTPStatusCode']}")
-            self.test_result[TC_num] = "PASS"
+            self.test_result[TC_num_sub] = "PASS"
         except self.lambda_function.exceptions.ResourceNotFoundException as e:
             print(f"Error {e}")
-            self.test_result[TC_num] = "FAIL"
-        print(f"Test status of {TC_num} : {self.test_result[TC_num]}")
+            self.test_result[TC_num_sub] = "FAIL"
+        print(f"Test status of {TC_num_sub} : {self.test_result[TC_num_sub]}")
     def validate_lambda_exists(self, TC_num):
-        self.validate_lambda_exists_each("video-splitting",TC_num+"_a")
-        self.validate_lambda_exists_each("face-recognition", TC_num + "_b")
+        self.validate_lambda_exists_each("video-splitting",TC_num, num=1)
+        self.validate_lambda_exists_each("face-recognition", TC_num, num=2)
+        if self.test_result[TC_num + "_" + str(chr(97 + 1))] == "FAIL" or self.test_result[TC_num + "_" + str(chr(97 + 2))] == "FAIL":
+            self.total_points -= 10
 
     def validate_s3_subfolders_each(self, buckets, in_objects, TC_num):
         for num, bucket in enumerate(buckets[1:]):
@@ -127,6 +132,10 @@ class aws_grader():
             # print(f"DEBUG :: Bucket {stage_1_bucket} has {count} objects that matches the pattern")
             if count >= 100:
                 self.test_result[TC_num] = "PASS"
+                self.total_points += 20
+            else:
+                missing = 100 - count
+                self.total_points = self.total_points + 20 - min(missing, 20)
         except ClientError:
             print(f"Couldn't get objects for bucket {bucket.name}")
             raise
@@ -291,6 +300,11 @@ class aws_grader():
 
         for i in range(len(self.buckets)):
             self.validate_s3_buckets_initial_each(bucket_num=i, TC_num=TC_num)
+        if self.test_result[TC_num + "_" + str(chr(97 + 1))] == "FAIL" or \
+            self.test_result[TC_num + "_" + str(chr(97 + 2))] == "FAIL" or \
+                self.test_result[TC_num + "_" + str(chr(97 + 3))] == "FAIL":
+            self.total_points -= 10
+
 
     def download_from_s3(self, bucket, folder_name):
         objects = self.s3.list_objects_v2(Bucket=bucket, Prefix=folder_name)
@@ -302,20 +316,32 @@ class aws_grader():
     def check_end_to_end(self, TC_num):
         print(" - Make sure workload generator is started. Press Ctrl^C to exit.")
         print(" ---------------------------------------------------------")
-        start_time = time.time()
-        self.test_result[TC_num] = "FAIL"
+        print("Proceed? (y/n)")
+        proceed = input()
+        if proceed == "y":
+            start_time = time.time()
+            self.test_result[TC_num] = "FAIL"
 
-        out_bucket = self.s3_resources.Bucket(self.buckets[2])
-        while len(list(out_bucket.objects.all())) <= 100 or (time.time()-start_time)<=400:
-            objects = out_bucket.objects.all()
-            print(f"Total objects in output bucket: {len(list(objects))}, current time elapsed: {time.time()-start_time}")
-            if len(list(objects)) == 100:
-                self.end_to_end_latency = time.time() - start_time
-                print(f"End-to-end latency is: {self.end_to_end_latency}")
-                break
-        if(time.time() - start_time) < 400:
-            self.test_result[TC_num] = "PASS"
-        print(f"Test status of {TC_num} : {self.test_result[TC_num]}\n")
+            out_bucket = self.s3_resources.Bucket(self.buckets[2])
+            while len(list(out_bucket.objects.all())) <= 100 or (time.time()-start_time)<=400:
+                objects = out_bucket.objects.all()
+                print(f"Total objects in output bucket: {len(list(objects))}, current time elapsed: {time.time()-start_time}")
+                if len(list(objects)) == 100:
+                    self.end_to_end_latency = time.time() - start_time
+                    print(f"End-to-end latency is: {self.end_to_end_latency}")
+                    break
+            if(time.time() - start_time) < 400:
+                self.test_result[TC_num] = "PASS"
+
+            if self.end_to_end_latency <= 300:
+                self.total_points += 30
+            elif 300 < self.end_to_end_latency <=400:
+                self.total_points += 20
+            elif self.end_to_end_latency > 400:
+                objects = out_bucket.objects.all()
+                missing = 100 - len(list(objects))
+                self.total_points = self.total_points + 20 - min(missing, 20)
+            print(f"Test status of {TC_num} : {self.test_result[TC_num]}\n")
 
 
     def check_correctness(self, TC_num):
@@ -335,7 +361,9 @@ class aws_grader():
                     match_count += 1
                 else:
                     print(f"{filename} content {line.strip()} did not match with {self.match[i % len(self.match)]}")
-        print(f"Matches = {match_count}")
+        missing = 100 - match_count
+        print(f"Missing correct results = {missing}")
+        self.total_points = self.total_points + 30 - min(missing, 30)
 
     def display_menu(self):
         print("\n")
@@ -347,12 +375,10 @@ class aws_grader():
         print("=============================================================================")
         print("1 - Validate all Lambda functions")
         print("2 - Validate S3 Buckets names and initial states")
-        print("3 - Validate Stage-1 bucket objects")
-        print("4 - Validate Output bucket objects")
-        print("5 - End-to-end pipeline testing")
+        print("3 - End-to-end pipeline testing")
+        print("4 - Validate Stage-1 bucket objects")
+        print("5 - Validate Output bucket objects")
         print("6 - Check the correctness of the results")
-        print("7 - Check lambda average duration")
-        print("8 - Check lambda concurrency")
         print("0 - Exit")
         print("Enter a choice:")
         choice = input()
@@ -366,19 +392,16 @@ class aws_grader():
             elif int(choice) == 2:
                 self.validate_s3_buckets_initial('Test_2')
             elif int(choice) == 3:
-                self.validate_bucket_objects('Test_3',bucket_num=1)
+                self.check_end_to_end('Test_3')
             elif int(choice) == 4:
-                self.validate_bucket_objects('Test_4',bucket_num=2)
+                self.validate_bucket_objects('Test_4',bucket_num=1)
             elif int(choice) == 5:
-                self.check_end_to_end('Test_5')
+                self.validate_bucket_objects('Test_5',bucket_num=2)
             elif int(choice) == 6:
                 self.check_correctness('Test_6')
-            elif int(choice) == 7:
-                self.check_lambda_duration('Test_5')
-            elif int(choice) == 8:
-                self.check_lambda_concurrency('Test_6')
             elif int(choice) == 0:
                 break
+        print(f"Total points : {self.total_points}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Grading Script')

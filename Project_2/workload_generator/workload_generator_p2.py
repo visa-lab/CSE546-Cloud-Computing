@@ -73,7 +73,7 @@ def upload_files(input_bucket, test_dir):
 			timestamps[filename_raw] = time.time()
 			upload_to_input_bucket_s3(input_bucket, test_dir, filename)
 
-# Stagger the requests by 1 seconds
+# Stagger the requests by 3 seconds
 def upload_files_v2(input_bucket, test_dir):
 	for filename in os.listdir(test_dir):
 		if filename.endswith(".mp4") or filename.endswith(".MP4"):
@@ -90,6 +90,7 @@ clear_input_bucket(stage1_bucket)
 clear_input_bucket(output_bucket)
 
 print("Starting the upload ...")
+# upload_files(input_bucket, test_cases)
 upload_files_v2(input_bucket, test_cases)
 
 end_time = time.time()
@@ -100,12 +101,11 @@ print("Waiting for 10 sec to finish all the processing of the functions ...")
 time.sleep(10)
 if timestamps:
 	for filename in os.listdir(test_cases):
-		out_bucket = output_bucket
+		out_bucket = "1234567890-output"
 		response = s3.list_objects(Bucket=out_bucket, Prefix=filename.split(".mp4")[0])
 		if "Contents" in response:
 			time_lastmodified = datetime.timestamp(response['Contents'][0]['LastModified'])
 			timestamps[filename.split(".mp4")[0]] = time_lastmodified - timestamps[filename.split(".mp4")[0]]
-
 
 	filtered_values = [value for value in timestamps.values() if 0 <= value <= 200]
 	if filtered_values:

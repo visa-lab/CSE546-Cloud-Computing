@@ -89,7 +89,8 @@ clear_input_bucket(input_bucket)
 clear_input_bucket(stage1_bucket)
 clear_input_bucket(output_bucket)
 
-print("Starting the upload ...")
+print("Starting the upload in 3 sec ...")
+time.sleep(3)
 # upload_files(input_bucket, test_cases)
 upload_files_v2(input_bucket, test_cases)
 

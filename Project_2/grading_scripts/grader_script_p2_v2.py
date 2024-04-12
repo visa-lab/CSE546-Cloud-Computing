@@ -52,9 +52,9 @@ class aws_grader():
             self.test_result[TC_num_sub] = "FAIL"
         print(f"Test status of {TC_num_sub} : {self.test_result[TC_num_sub]}")
     def validate_lambda_exists(self, TC_num):
-        self.validate_lambda_exists_each("video-splitting",TC_num, num=1)
-        self.validate_lambda_exists_each("face-recognition", TC_num, num=2)
-        if self.test_result[TC_num + "_" + str(chr(97 + 1))] == "FAIL" or self.test_result[TC_num + "_" + str(chr(97 + 2))] == "FAIL":
+        self.validate_lambda_exists_each("video-splitting",TC_num, num=0)
+        self.validate_lambda_exists_each("face-recognition", TC_num, num=1)
+        if self.test_result[TC_num + "_" + str(chr(97 + 0))] == "FAIL" or self.test_result[TC_num + "_" + str(chr(97 + 1))] == "FAIL":
             self.total_points -= 10
 
     def validate_s3_subfolders_each(self, buckets, in_objects, TC_num):
@@ -300,9 +300,9 @@ class aws_grader():
 
         for i in range(len(self.buckets)):
             self.validate_s3_buckets_initial_each(bucket_num=i, TC_num=TC_num)
-        if self.test_result[TC_num + "_" + str(chr(97 + 1))] == "FAIL" or \
-            self.test_result[TC_num + "_" + str(chr(97 + 2))] == "FAIL" or \
-                self.test_result[TC_num + "_" + str(chr(97 + 3))] == "FAIL":
+        if self.test_result[TC_num + "_" + str(chr(97 + 0))] == "FAIL" or \
+            self.test_result[TC_num + "_" + str(chr(97 + 1))] == "FAIL" or \
+                self.test_result[TC_num + "_" + str(chr(97 + 2))] == "FAIL":
             self.total_points -= 10
 
 

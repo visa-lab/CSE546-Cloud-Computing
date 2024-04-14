@@ -102,7 +102,7 @@ print("Waiting for 10 sec to finish all the processing of the functions ...")
 time.sleep(10)
 if timestamps:
 	for filename in os.listdir(test_cases):
-		out_bucket = "1234567890-output"
+		out_bucket = output_bucket
 		response = s3.list_objects(Bucket=out_bucket, Prefix=filename.split(".mp4")[0])
 		if "Contents" in response:
 			time_lastmodified = datetime.timestamp(response['Contents'][0]['LastModified'])

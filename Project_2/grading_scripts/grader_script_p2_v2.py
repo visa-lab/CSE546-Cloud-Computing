@@ -12,6 +12,7 @@ from botocore.exceptions import ClientError
 from datetime import datetime,timezone,timedelta
 import re
 import os
+import shutil
 
 class aws_grader():
     def __init__(self, access_key, secret_key, buckets, lambda_names, region, asu_id):
@@ -345,24 +346,37 @@ class aws_grader():
 
 
     def check_correctness(self, TC_num):
+        if os.path.exists(self.output_folder):
+            shutil.rmtree(self.output_folder)
         if not os.path.exists(self.output_folder):
             os.makedirs(self.output_folder)
         out_bucket = self.s3_resources.Bucket(self.buckets[2])
         objects = out_bucket.objects.all()
+        print(f"Downloading {len(list(objects))} objects from the {self.buckets[2]} bucket ...")
         for o in objects:
-            if o.key not in os.listdir(self.output_folder):
-                print(self.output_folder,out_bucket,o.key)
-                self.s3.download_file(self.buckets[2], o.key, os.path.join(self.output_folder,o.key))
+            # print(self.output_folder,out_bucket,o.key)
+            self.s3.download_file(self.buckets[2], o.key, os.path.join(self.output_folder,o.key))
         match_count = 0
         for i,filename in enumerate(sorted(os.listdir(self.output_folder))):
             with open(os.path.join(self.output_folder, filename),"r") as f:
                 line = f.read()
-                if line.strip() == self.match[i % len(self.match)]:
+                prefix_pattern = r"test_\d{2}.txt"
+                if not re.match(prefix_pattern, filename):
+                    self.test_result[TC_num] = "FAIL"
+                    print(f"Filename does not follow the required pattern {prefix_pattern}. Cannnot check correctness test.")
+                    return
+                filenum = int(filename.split("_")[1].split(".")[0]) % len(self.match)
+                if line.strip() == self.match[filenum]:
                     match_count += 1
                 else:
                     print(f"{filename} content {line.strip()} did not match with {self.match[i % len(self.match)]}")
         missing = 100 - match_count
         print(f"Missing correct results = {missing}")
+        if missing == 0:
+            self.test_result[TC_num] = "PASS"
+        else:
+            self.test_result[TC_num] = "FAIL"
+        print(f"Test status of {TC_num} : {self.test_result[TC_num]}\n")
         self.total_points = self.total_points + 30 - min(missing, 30)
 
     def display_menu(self):
